@@ -6,11 +6,10 @@ alwaysApply: false
 
 # Addiction Motivational Model (AMM)
 
-Read `model/00_OVERVIEW.md` and `model/03_MATHEMATICAL_MODELS.md` before edits.
+Read `model/07_DATA_RULES_AND_LIKELIHOOD.md` and `model/08_FITTING_PRIORITY.md` before fitting code.
 
-- Canonical spec lives in `model/` (logic, states, M0–M4, workflow, predictions).
-- Do not add email or chat logs to the repo.
-- `x_t` is hidden value; lick rate = softplus/logistic output (M1).
-- Active: V_t, D_t, interaction at re-exposure. Passive: C_t × G_t for withdrawal PIT.
-- PR = continue/pause/quit, not foraging patch-leave.
-- JSONL: `docs/MORPHINE_PR_EXPERIMENT.md`.
+- Canonical spec: `model/` (logic, states, M0–M4, workflow).
+- run_009: day_index >= 4; passive During 6–10 mask licks (unobserved), keep rewards; PairID RE.
+- Tier 1 now: M0 drift + M1 softplus(x); Tier 3–4 conditional on identifiability.
+- Do not add email logs. Do not label passive model "PIT" — use generalized C×G.
+- `x_t` hidden; PR = continue/pause/quit. Data: `docs/DATA_SOURCES.md`.
