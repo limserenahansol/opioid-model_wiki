@@ -1,6 +1,15 @@
 # Morphine PR Experiment — Reference (condensed)
 
-Self-contained summary for the [opioid-model_wiki](https://github.com/limserenahansol/opioid-model_wiki) repo. Full analysis plan may exist in a separate behavior-analysis repository.
+Self-contained summary for [opioid-model_wiki](https://github.com/limserenahansol/opioid-model_wiki).
+
+**Full data rules:** [model/07_DATA_RULES_AND_LIKELIHOOD.md](../model/07_DATA_RULES_AND_LIKELIHOOD.md)  
+**Data locations:** [DATA_SOURCES.md](./DATA_SOURCES.md)
+
+## Analysis filter
+
+- **Exclude** `day_index` 1–3 (FR + unstable first PR day)  
+- **Include** `day_index ≥ 4`  
+- **Passive During 6–10:** mask licks in likelihood; rewards still valid  
 
 ## Timeline (18 days)
 

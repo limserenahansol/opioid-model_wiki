@@ -1,83 +1,34 @@
 # Experiment & Data
 
-Canonical detail: [../docs/MORPHINE_PR_EXPERIMENT.md](../docs/MORPHINE_PR_EXPERIMENT.md)
+**Canonical:** [../model/07_DATA_RULES_AND_LIKELIHOOD.md](../model/07_DATA_RULES_AND_LIKELIHOOD.md) · [../docs/DATA_SOURCES.md](../docs/DATA_SOURCES.md)
 
-## Timeline (18 days)
+---
 
-| Days | Phase | Reward | Notes |
-|------|-------|--------|-------|
-| 1–2 | Habituation | Sucrose | FR1, FR3 |
-| 3–5 | Pre | Water | PR baseline |
-| 6–10 | During | Morphine | **Active vs yoked passive** |
-| 11–13 | Post | Morphine | Both groups active PR |
-| 14–16 | Withdrawal | Water | Abstinence from morphine |
-| 17–18 | Re-exposure | Morphine | Reinstatement test |
+## Cohort
 
-## Active vs passive (Days 6–10)
+**run_009** (Dec 2025) — lockout annotated for passive During.
 
-| | Active | Passive (yoked) |
-|---|--------|-----------------|
-| Licks counted | Yes (`valid: true`) | No (`valid: false`) |
-| Rewards | Contingent on PR | Replay from paired active mouse |
-| Learning | Action–outcome | Exposure + context (Pavlovian) |
+---
 
-## PR task
+## Analysis rules (summary)
 
-- Schedule: **PR1** — requirement increases by 1 per successful trial (trial 0 → 1 lick, trial 1 → 2 licks, …)
-- Session ~15 min
-- **Breakpoint:** `requirementLast` = max requirement achieved
+| Rule | Value |
+|------|-------|
+| Drop days | 1, 2, 3 |
+| Analyze | `day_index ≥ 4` |
+| Passive lockout | days 6–10 During: **mask licks**, keep rewards |
+| Pairs | `PairID` random effect |
+| Phase focus days | 4, 7, 12, 15, 18 (2nd day of phase) |
 
-## JSONL events (behavioral)
+---
 
-File pattern: `{cage}{mouse}_{phase}{day}.jsonl`
+## Starter mice
 
-| `tag` | Use |
-|-------|-----|
-| `meta` | Session parameters (increment, lockout, reward duration) |
-| `trial_start` | `req` = current requirement |
-| `lick` | `n`, `valid`, `elapsed` |
-| `reward_cmd` / `reward_end` | Reward timing |
-| `trial_end` | `requirement`, `counted`, `hit`, `rt_ms` |
+- **Active:** `6099_orange`, day 12 or 13 (Post)  
+- **Passive:** `6099_red`, day 6–10 (During)
 
-## Derived features (for modeling)
+---
 
-**Session-level:** `requirementLast`, total rewards, lick rate, mean/median ILI, bout counts, session duration
+## JSON / events
 
-**Lick-level (for drift fit):** timestamp, rewarded vs unrewarded, trial index, current requirement `T`, pause duration
-
-**Phase labels:** `pre | during | post | withdrawal | reexposure` + `group: active | passive`
-
-## Data checklist for CS / SBI fitting
-
-Required:
-
-- `mouse_id`, `group`, `phase`, `day`
-- Lick timestamps; reward timestamps
-- Rewarded vs unrewarded per lick (or infer from trial structure)
-- PR requirement `T` per trial / lick
-- Breakpoint per session
-
-Highly useful:
-
-- Pause duration, bout onsets/offsets
-- Latency to first lick, re-engagement after pause
-- Lockout timing (newer cohort)
-- Cue / drug availability flags
-
-## Pharmacology (parallel, not v1 model core)
-
-- TI (days 5–18), TST/HP/Straub at phase endpoints — link later, not required for first drift fit.
-
-## Planned code layout (not yet in repo)
-
-From parent doc — implement under e.g. `morphine_pr_analysis/`:
-
-```
-src/data_processing/jsonl_parser.py
-src/feature_extraction/behavioral_features.py
-src/modeling/   ← drift, dual-state, SBI wrappers (TO BUILD)
-```
-
-## Raw data location
-
-User-specific. Agents: **ask** or use paths given in session; do not invent cage IDs.
+See [../docs/MORPHINE_PR_EXPERIMENT.md](../docs/MORPHINE_PR_EXPERIMENT.md) for event tags; run_009 uses TTL fields (`Lick_TTL`, `Injector_TTL`) per Drive README.

@@ -6,14 +6,17 @@ How AMM parameters and active states change across the 18-day paradigm.
 
 ## Timeline
 
-| Days | Phase | Reward | Group manipulation |
-|------|-------|--------|-------------------|
-| 1–2 | Habituation | Sucrose | None |
-| 3–5 | Pre | Water | Both active PR |
-| 6–10 | During | Morphine | **Active vs yoked passive** |
-| 11–13 | Post | Morphine | Both active PR |
-| 14–16 | Withdrawal | Water | Both active PR |
-| 17–18 | Re-exposure | Morphine | Both active PR |
+| day_index | Phase | Reward | Group manipulation | Analysis |
+|-----------|-------|--------|---------------------|----------|
+| 1–2 | Habituation | Sucrose | FR | **Exclude** |
+| 3 | Pre (PR day 1) | Water | Both PR | **Exclude** |
+| 4–5 | Pre | Water | Both PR | **Focus day 4** |
+| 6–10 | During | Morphine | **Active vs yoked passive** | **Focus day 7**; lockout passive |
+| 11–13 | Post | Morphine | Both active PR | **Focus 12–13** (`6099_orange`) |
+| 14–16 | Withdrawal | Water | Both active PR | **Focus day 15** |
+| 17–18 | Re-exposure | Morphine | Both active PR | **Focus day 18** |
+
+**Rule:** `day_index ≥ 4` only — see [07_DATA_RULES_AND_LIKELIHOOD.md](./07_DATA_RULES_AND_LIKELIHOOD.md).
 
 ---
 
@@ -24,7 +27,7 @@ How AMM parameters and active states change across the 18-day paradigm.
 | Pre | low (water) | low | low | low | baseline |
 | During | **↑↑** contingent | moderate | **↑** pairing | low | active > passive breakpoint |
 | Post | consolidated | low | slow ↑ V transfer | low | active high |
-| Withdrawal | held in memory | **↑↑** | stable C | **↑** | passive ↑ possible (PIT) |
+| Withdrawal | held in memory | **↑↑** | stable C | **↑** | passive ↑ possible (C×G) |
 | Re-exposure | drives seeking | high then relief | C persists | ↓ | active rebound >> passive |
 
 ---
@@ -33,11 +36,12 @@ How AMM parameters and active states change across the 18-day paradigm.
 
 | | Active | Passive |
 |---|--------|---------|
-| Lick `valid` | true | **false** |
-| `V` update | `η_V · R` on rewarded valid licks | **blocked** or tiny |
+| Lick `valid` / TTL | observed | **lockout: mask from lick likelihood** |
+| Reward / injector TTL | observed | **observed (yoked)** → valid `r(t)` |
+| `V` update | `η_V · R` on rewarded valid licks | weak / blocked on licks; reward events OK |
 | `C` update | secondary | **η_C on morphine delivery** |
-| PR breakpoint | normal progression | disrupted / lower |
-| Model | M2 active params | M3b or M0 with `R≈0` for V |
+| Starter mouse | — | `6099_red` days 6–10 |
+| Model | M0–M1 Tier 1 | same; no lick likelihood in lockout window |
 
 ---
 

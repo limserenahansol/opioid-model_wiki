@@ -14,7 +14,10 @@ Bilingual where useful for this lab.
 | **V_t** | Opioid reward / action–outcome value state | opioid 가치 적분 상태 |
 | **D_t** | Deficit / withdrawal burden state | 결핍·금단 적분 상태 |
 | **x_t** | Single hidden engagement value (Model 0–1) | 잠재 참여 가치 |
-| **PIT** | Pavlovian-instrumental transfer-like invigoration | PIT 유사 일반화 동기 |
+| **Generalized motivation gain** | `C_t × G` for passive withdrawal (↑ PR without strong V); **avoid “PIT” in papers** — no separate Pavlovian phase | 일반화 동기 gain |
+| **Lockout window** | Passive During days 6–10: licks masked, rewards valid | 패시브 락아웃 |
+| **day_index** | Calendar day in paradigm; analyze ≥ 4 | 일 index |
+| **PairID** | Yoked active–passive pair | 요크 쌍 |
 | **C_t** | Pavlovian context / cue memory (passive model) | 맥락·단서 기억 |
 | **Contingency** | Action causes outcome | 행동–결과 연속성 |
 | **SBI** | Simulation-based inference (MNLE, MCMC, LAN) | 시뮬레이션 기반 추론 |

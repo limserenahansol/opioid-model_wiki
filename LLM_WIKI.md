@@ -2,7 +2,7 @@
 
 **GitHub:** [github.com/limserenahansol/opioid-model_wiki](https://github.com/limserenahansol/opioid-model_wiki)
 
-> **Read `model/` first.** This repo is a **computational addiction model spec**, not email or grant drafts.
+> **Read `model/` first.** Computational addiction model + **run_009 data rules** — not email archives.
 
 ---
 
@@ -13,10 +13,54 @@
 | — | [model/00_OVERVIEW.md](./model/00_OVERVIEW.md) | AMM index |
 | 1 | [model/01_LOGIC_FLOW.md](./model/01_LOGIC_FLOW.md) | Question → motifs → groups → behavior |
 | 2 | [model/02_STATE_ARCHITECTURE.md](./model/02_STATE_ARCHITECTURE.md) | V, D, C, G, x; motifs A–D |
-| 3 | [model/03_MATHEMATICAL_MODELS.md](./model/03_MATHEMATICAL_MODELS.md) | **M0–M4 equations & parameters** |
-| 4 | [model/04_GROUP_AND_PHASE.md](./model/04_GROUP_AND_PHASE.md) | Active vs passive × 18-day phases |
-| 5 | [model/05_FITTING_WORKFLOW.md](./model/05_FITTING_WORKFLOW.md) | JSONL → SBI → model comparison |
-| 6 | [model/06_PREDICTIONS.md](./model/06_PREDICTIONS.md) | H0–H4 falsifiable tests |
+| 3 | [model/03_MATHEMATICAL_MODELS.md](./model/03_MATHEMATICAL_MODELS.md) | M0–M4 equations |
+| 4 | [model/04_GROUP_AND_PHASE.md](./model/04_GROUP_AND_PHASE.md) | Active vs passive × days |
+| 5 | [model/05_FITTING_WORKFLOW.md](./model/05_FITTING_WORKFLOW.md) | JSON → mask → SBI |
+| 6 | [model/06_PREDICTIONS.md](./model/06_PREDICTIONS.md) | H0–H4 tests |
+| **7** | [model/07_DATA_RULES_AND_LIKELIHOOD.md](./model/07_DATA_RULES_AND_LIKELIHOOD.md) | **day≥4, lockout mask, pairs** |
+| **8** | [model/08_FITTING_PRIORITY.md](./model/08_FITTING_PRIORITY.md) | **Tier 1–4; Eli alignment** |
+
+---
+
+## Data & code (run_009)
+
+| Resource | Link |
+|----------|------|
+| JSON for fitting | [Drive](https://drive.google.com/drive/folders/1tmojU4ahssZEvAdNGa5w6BfPAYERuYsV?usp=drive_link) |
+| README_for_Eli | [Drive bundle](https://drive.google.com/drive/folders/12QMUiNDzg3gf822YJkQBE0D0QJrXH2Kf) |
+| MATLAB analysis | [opioidaddiction-matlab](https://github.com/limserenahansol/opioidaddiction-matlab) |
+| Full map | [docs/DATA_SOURCES.md](./docs/DATA_SOURCES.md) |
+
+---
+
+## Critical analysis rules (never violate)
+
+1. **`day_index ≥ 4`** only (drop FR days 1–2 and unstable PR day 3).
+2. **Passive During (days 6–10):** mask **Lick_TTL** from likelihood → **unobserved**, not zero.
+3. **Reward / Injector_TTL** always valid (yoked rewards).
+4. **`PairID`** = random effect for group inference.
+5. **`x_t`** hidden; `λ_t = softplus(x_t)`; quit if `x_t < θ_stop`.
+6. **Fit Tier 1 (M0–M1) before** dual-state or generalized-gain extensions.
+
+---
+
+## Fitting priority (summary)
+
+```
+NOW:     M0 drift → M1 output → MNLE/SBI
+SANITY:  per-event r(t) vs E[r|T]
+LATER:   M2 V×D only if identifiable (pupil / pair / passive V≈0 prior)
+LATER:   M3b C×G for passive (not literal “PIT” label)
+```
+
+---
+
+## Starter sessions
+
+| Group | Mouse | Days |
+|-------|-------|------|
+| Active Post | `6099_orange` | 12 or 13 |
+| Passive During | `6099_red` | 6–10 |
 
 ---
 
@@ -24,56 +68,26 @@
 
 | Doc | Use |
 |-----|-----|
-| [wiki/01_SCIENCE_AND_HYPOTHESES.md](./wiki/01_SCIENCE_AND_HYPOTHESES.md) | Narrative science (points to `model/`) |
-| [wiki/02_EXPERIMENT_AND_DATA.md](./wiki/02_EXPERIMENT_AND_DATA.md) | JSONL, phases, data columns |
+| [wiki/02_EXPERIMENT_AND_DATA.md](./wiki/02_EXPERIMENT_AND_DATA.md) | Pointers to model/07 |
 | [wiki/05_GLOSSARY.md](./wiki/05_GLOSSARY.md) | Terms |
-| [wiki/06_AGENT_PLAYBOOK.md](./wiki/06_AGENT_PLAYBOOK.md) | Coding rules |
-| [docs/MORPHINE_PR_EXPERIMENT.md](./docs/MORPHINE_PR_EXPERIMENT.md) | Experiment reference |
+| [wiki/06_AGENT_PLAYBOOK.md](./wiki/06_AGENT_PLAYBOOK.md) | Agent rules |
+| [docs/MORPHINE_PR_EXPERIMENT.md](./docs/MORPHINE_PR_EXPERIMENT.md) | Short experiment ref |
 
 ---
 
-## Model in one diagram
+## Collaborators
 
-```
-Normative Q → Motifs (V, D, C, engagement, context gain)
-           → Group architecture (active: V×D  |  passive: C×G)
-           → Implementations M0→M1→M2→M3→M4
-           → Fit on lick data (SBI)
-           → Test H0–H4
-```
+- **Elijah Paul (Eli):** drift model, MNLE/SBI, Tier 1–2 fitting  
+- **Hansol Lim:** run_009, lockout rules, paradigm  
 
-**Implementations:** M0 drift `x_t` → M1 `λ=f(x)` → M2 `V_t,D_t` → M3 passive `C×G` → M4 pause.
-
----
-
-## Core rules (do not contradict)
-
-1. No explicit full-PR-schema representation in v1.
-2. `x_t` is hidden value; lick rate = `softplus(x_t)` or logistic.
-3. Active re-exposure: **V × D interaction**, not exposure alone.
-4. Passive withdrawal ↑ seeking: **C × G** (PIT-like), not strong V.
-5. PR task = continue / pause / quit (not foraging patch-leave).
-
----
-
-## Repository layout
-
-```
-opioid-model_wiki/
-├── model/              ← CANONICAL addiction model
-├── wiki/               ← science, data, glossary, agents
-├── docs/               ← experiment + grant summary
-├── LLM_WIKI.md         ← this file
-├── logic_flow_schematic.png
-└── src/                ← (planned) code from model/05
-```
+Meeting target: **Monday 10:00 CNC** (confirm locally). Eli may start fitting before meeting.
 
 ---
 
 ## For agents
 
-- Implement from [model/03_MATHEMATICAL_MODELS.md](./model/03_MATHEMATICAL_MODELS.md) and [model/05_FITTING_WORKFLOW.md](./model/05_FITTING_WORKFLOW.md).
-- Do **not** add email threads to the repo.
-- Regenerate figure: `python3 generate_logic_schematic.py`
+- Implement [model/07](./model/07_DATA_RULES_AND_LIKELIHOOD.md) before any likelihood code.
+- Do **not** commit email threads.
+- Regenerate schematic: `python3 generate_logic_schematic.py`
 
-**Code status:** spec complete; `src/` not yet built.
+**Code status:** spec + data rules complete; `src/` not in repo yet.

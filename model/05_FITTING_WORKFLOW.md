@@ -1,6 +1,8 @@
 # Fitting Workflow
 
-End-to-end pipeline from JSONL to model comparison. **No email steps** — engineering workflow only.
+End-to-end pipeline from **run_009 JSON** to model comparison.
+
+**Prerequisites:** [07_DATA_RULES_AND_LIKELIHOOD.md](./07_DATA_RULES_AND_LIKELIHOOD.md) · [08_FITTING_PRIORITY.md](./08_FITTING_PRIORITY.md) · [DATA_SOURCES.md](../docs/DATA_SOURCES.md)
 
 ---
 
@@ -8,139 +10,147 @@ End-to-end pipeline from JSONL to model comparison. **No email steps** — engin
 
 ```mermaid
 flowchart TD
-    A[Raw JSONL per session] --> B[Parse events]
-    B --> C[Lick table: time, rewarded, valid, T, phase, group]
-    C --> D[Session features: breakpoint, bouts, pauses]
-    D --> E{Select model tier}
-    E --> M0[M0/M1 fit]
-    E --> M2[M2 fit]
-    E --> M3[M3 group-specific]
-    M0 --> F[SBI: MNLE / MCMC / LAN]
-    M2 --> F
-    M3 --> F
-    F --> G[Posterior / point estimates]
-    G --> H[Simulate sessions]
-    H --> I[Compare: AIC, PPC, held-out]
-    I --> J[Report: params × group × phase]
-    J --> K[Future: neural alignment]
+    A[run_009 JSON per session] --> B[Apply day filter day_index ≥ 4]
+    B --> C[Parse events + manifest PairID]
+    C --> D[Mask Passive During licks 6–10]
+    D --> E[Lick table + reward r_t valid]
+    E --> F[Session features + within-trial rate]
+    F --> G{Tier 1: M0 → M1}
+    G --> H[Compare per-event vs smoothed r]
+    H --> I{SBI MNLE / MCMC / LAN}
+    I --> J[Pair random effects]
+    J --> K{Tier 3–4 if identifiable}
+    K --> L[Model comparison + PPC]
 ```
 
 ---
 
-## Step 1 — Ingest
+## Step 0 — Load data
 
-**Input:** `{cage}{mouse}_{phase}{day}.jsonl` + `mouse_info.csv` (group)
+| Source | URL |
+|--------|-----|
+| JSON extract | [Drive](https://drive.google.com/drive/folders/1tmojU4ahssZEvAdNGa5w6BfPAYERuYsV?usp=drive_link) |
+| README / 5-file subset | [Drive bundle](https://drive.google.com/drive/folders/12QMUiNDzg3gf822YJkQBE0D0QJrXH2Kf) → `README_for_Eli.md` |
+| MATLAB rules | [opioidaddiction-matlab](https://github.com/limserenahansol/opioidaddiction-matlab) |
+
+---
+
+## Step 1 — Ingest & filter
+
+**Filters (mandatory):**
+
+```python
+df = df[df.day_index >= 4]
+```
 
 **Output columns:**
 
-| column | type |
-|--------|------|
-| `mouse_id` | str |
-| `group` | active \| passive |
-| `phase` | str |
-| `day` | int |
-| `lick_idx` | int |
-| `t_sec` | float |
-| `rewarded` | bool |
-| `valid` | bool |
-| `requirement_T` | int |
-| `trial` | int |
+| column | type | notes |
+|--------|------|-------|
+| `mouse_id` | str | e.g. `6099_orange` |
+| `group` | active \| passive | from manifest |
+| `PairID` | str/int | yoked pair |
+| `phase` / `Period` | str | Pre, During, Post, … |
+| `day_index` | int | ≥ 4 |
+| `lick_observed` | bool | False if passive During lockout |
+| `reward_observed` | bool | True for yoked injector |
+| `rewarded` | bool | from event alignment |
+| `requirement_T` | int | PR step |
+| `t_sec` | float | event time |
 
 ---
 
-## Step 2 — Features (behavioral summary)
+## Step 2 — Likelihood assembly
 
-Per session:
+For each time step:
+
+1. If `reward_observed`: apply `r(t)` to state (`+R` on delivery).
+2. If `lick_observed`: apply lick `r`, include `P(lick | x_t)` (M1).
+3. If `not lick_observed` (lockout): **omit** lick factor; **do not** set rate to 0.
+
+**Hierarchy:** `PairID` random intercept / random slope on key params (`R`, `τ`) for group summaries.
+
+---
+
+## Step 3 — Starter sessions
+
+| Role | Mouse | Days |
+|------|-------|------|
+| Active PR | `6099_orange` | 12 or 13 (Post) |
+| Passive PR | `6099_red` | 6–10 (During) |
+
+Run M0→M1 on these before full cohort.
+
+---
+
+## Step 4 — Model tiers
+
+| Tier | Action |
+|------|--------|
+| 1 | Fit M0, then M1 (`softplus` or logistic output) |
+| 2 | Refit with per-event `r` vs `E[r\|T]`; compare `τ, α, σ` |
+| 3 | M2 only if [identifiable](./08_FITTING_PRIORITY.md) |
+| 4 | M3b passive `C×G` only if Tier 3 or passive withdrawal residual |
+
+---
+
+## Step 5 — Simulation-based inference
+
+**Methods:** MNLE (preferred per Eli), MCMC, LAN.
+
+**Summaries for ABC / MNLE:**
 
 - `requirementLast` (breakpoint)
-- `n_licks`, `n_rewards`, `mean_ILI`, `n_bouts`
-- `max_pause_sec`, `n_reengagements`
-
-Used for **summary-level** model checks; lick-level for simulation.
-
----
-
-## Step 3 — Model tier selection
-
-| Question | Start with |
-|----------|------------|
-| Do groups differ at all on persistence? | M0 |
-| Is lick rate nonlinear in latent state? | M1 |
-| Re-exposure needs withdrawal interaction? | M2 |
-| Passive withdrawal without high V? | M3b |
-| Pause structure matters? | M4 |
-
-**Rule:** never skip M0 baseline before M2.
-
----
-
-## Step 4 — Simulation-based inference
-
-**Why SBI:** stochastic lick process; likelihood not closed form.
-
-**Methods:** MNLE, neural likelihood (LAN), ABC-MCMC.
-
-**Target summaries for ABC (if used):**
-
-- breakpoint distribution
-- mean licks per trial
-- pause duration distribution
+- within-trial lick rate slope
+- mean ILI, pause distribution
 - re-engagement count
 
-**Loss for MNLE:** multivariate Gaussian on summary stats per session.
+**Simulate** with same lockout masking as data.
 
 ---
 
-## Step 5 — Model comparison
+## Step 6 — Validation targets
 
-| Criterion | Use |
-|-----------|-----|
-| AIC / BIC | nested models (M0 vs M1) |
-| Held-out sessions | same mouse, different days |
-| Posterior predictive check | simulate lick trains vs data |
-| H2 | interaction term in M2 on re-exposure |
-| H3 | M3b vs M2 on passive withdrawal |
-
-**Report table:**
-
-```
-model | group | phase | param | estimate | CI
-M2    | active | reexposure | beta | ... | ...
-```
+| Check | Pass |
+|-------|------|
+| M1 PPC | Simulated breakpoint ≈ data |
+| Within-trial slowing | Negative slope in data; drift model reproduces |
+| Active vs passive Tier 1 | Different `R` or `τ` posteriors |
+| Smoothed vs event `r` | Similar `τ, α, σ` |
+| Lockout | Fitting without mask → worse BIC (sanity) |
 
 ---
 
-## Step 6 — Deliverables
+## Step 7 — Deliverables
 
-1. Parameter posteriors by group × phase  
-2. Simulated vs observed breakpoint (violin)  
-3. Example latent trace `M_t` or `x_t` under best model  
-4. Model comparison table (ΔAIC)  
-5. Figure: [logic flow schematic](../logic_flow_schematic.png)
+1. Tier 1 posteriors: `R, L, τ, α, σ, θ_stop` × group × phase  
+2. Pair-level random effects table  
+3. Per-event vs smoothed comparison plot  
+4. Latent trace `x_t` vs licks (one session each group)  
+5. Decision memo: proceed to M2? (identifiability)  
 
 ---
 
-## Planned repository layout
+## Planned code layout
 
 ```
 src/
-  ingest/jsonl_parser.py
-  features/session_features.py
+  ingest/json_run009.py      # manifest + lockout mask
+  features/within_trial_rate.py
   models/m0_drift.py
-  models/m2_dual.py
-  models/m3_group.py
-  fit/sbi_runner.py
-  simulate/session_sim.py
+  models/m1_output.py
+  fit/sbi_mnle.py
+  fit/hierarchical_pair.py
 ```
 
-**Status:** not implemented — wiki spec is source of truth until `src/` lands.
+**Status:** spec only — Eli may prototype in parallel.
 
 ---
 
 ## Dependencies (target)
 
 - `numpy`, `pandas`, `scipy`
-- `sbi` or custom MNLE
-- optional: `jax` for differentiable simulate
+- `sbi` or Eli’s MNLE stack
+- optional: `jax`, `bambi` / `statsmodels` for pair RE
 
 Next: [06_PREDICTIONS.md](./06_PREDICTIONS.md)

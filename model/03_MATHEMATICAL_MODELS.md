@@ -1,6 +1,8 @@
 # Mathematical Models M0–M4
 
-Implementations of AMM. Fit **in order**; compare with AIC/BIC and held-out sessions.
+Implementations of AMM.
+
+**Fitting order (Hansol–Eli):** Lock **[M0 + M1](./08_FITTING_PRIORITY.md)** first → compare reward inputs → add M2/M3b only if [identifiable](./08_FITTING_PRIORITY.md#tier-3--dual-state-m2-identifiability-caveats). Apply [data rules](./07_DATA_RULES_AND_LIKELIHOOD.md) (lockout mask, `day_index ≥ 4`).
 
 ---
 
@@ -124,21 +126,25 @@ ENGAGED  if  M_k > θ_eng
 
 ---
 
-## M3 — Group-specific architecture
+## M3 — Group-specific architecture (Tier 3–4, conditional)
 
-### Active (M3a)
+> **Naming:** Do **not** call this “PIT” in manuscripts — use **generalized non-contingent motivation gain**. See [08_FITTING_PRIORITY.md](./08_FITTING_PRIORITY.md).
+
+### Active (M3a) — requires M2 identifiable
 
 ```
 drive_k = V_k − D_k + β_a · V_k · D_k · 𝟙[withdrawal ∨ reexposure]
 ```
 
-### Passive (M3b)
+### Passive (M3b) — generalized motivation
 
 ```
 C_{k+1} = C_k + η_C · 𝟙[reward delivery during yoked/during]
 G_k = G_base + η_G · 𝟙[withdrawal]
 drive_k = C_k · G_k
 ```
+
+**Likelihood note:** During passive lockout (days 6–10), update `C` from **injector/reward TTL**; mask licks ([07](./07_DATA_RULES_AND_LIKELIHOOD.md)).
 
 **Post phase (passive):** optional transfer `V_k += η_transfer · C_k` when `valid` licks resume — tests **passive → instrumental** transition.
 

@@ -3,9 +3,10 @@
 ## Read order
 
 1. [../LLM_WIKI.md](../LLM_WIKI.md)
-2. [../model/00_OVERVIEW.md](../model/00_OVERVIEW.md)
-3. [../model/03_MATHEMATICAL_MODELS.md](../model/03_MATHEMATICAL_MODELS.md) before writing code
-4. [../model/05_FITTING_WORKFLOW.md](../model/05_FITTING_WORKFLOW.md) for pipeline
+2. [../model/07_DATA_RULES_AND_LIKELIHOOD.md](../model/07_DATA_RULES_AND_LIKELIHOOD.md) **before any likelihood code**
+3. [../model/08_FITTING_PRIORITY.md](../model/08_FITTING_PRIORITY.md)
+4. [../model/03_MATHEMATICAL_MODELS.md](../model/03_MATHEMATICAL_MODELS.md)
+5. [../model/05_FITTING_WORKFLOW.md](../model/05_FITTING_WORKFLOW.md)
 
 ## Do
 
@@ -18,7 +19,11 @@
 
 - Add **email** or chat transcripts to the repo
 - Treat `x_t` as lick rate
-- Skip M0 baseline before M2
+- Treat passive lockout licks as **zero** (must be **masked**)
+- Include days 1–3 in fits
+- Fit separate V_t and D_t without identifiability checks
+- Label passive model “PIT” in publication text
+- Skip M0–M1 before M2
 - Claim neural results without data
 
 ## Common tasks

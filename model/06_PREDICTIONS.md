@@ -51,19 +51,18 @@ Map scientific hypotheses to **model comparisons** and **observable outcomes**.
 
 ---
 
-## H3 — Passive PIT (C × G)
+## H3 — Passive generalized motivation (C × G)
 
-**Claim:** Passive withdrawal ↑ PR via `C_t · G_t`, not high `V_t`.
+**Claim:** Passive withdrawal ↑ PR via `C_t · G_t` (non-contingent / context gain), not high `V_t`. **Do not label as PIT experiment.**
 
-**Test:**
+**Test (Tier 4 only):**
 
 | Model | Passive withdrawal sessions |
 |-------|----------------------------|
-| M2 shared V,D | poor fit |
-| M3b C×G | better fit |
-| M3b + transfer | better Post learning |
+| M1 shared params | baseline |
+| M3b C×G | better fit if Tier 1 residual |
 
-**Behavior:** passive withdrawal breakpoint ↑ without During `valid` licks.
+**Behavior:** passive withdrawal breakpoint ↑; During licks were masked but rewards observed.
 
 ---
 
