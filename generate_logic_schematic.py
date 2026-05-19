@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate logic-flow schematic PNG for opioid behavioral model proposal."""
+"""Generate logic-flow schematic PNG for Addiction Motivational Model (AMM)."""
 
 from pathlib import Path
 
@@ -52,7 +52,7 @@ def main():
     ax.set_ylim(0, 1)
     ax.axis("off")
     ax.set_title(
-        "Opioid PR: Logic Flow (behavior-only computational model)",
+        "Addiction Motivational Model (AMM) — logic & implementation flow",
         fontsize=14,
         fontweight="bold",
         pad=12,
@@ -121,8 +121,8 @@ def main():
         (0.08, 0.28),
         0.84,
         0.14,
-        "Model ladder:  (0) drift x_t  →  (1) x_t → λ_t  →  (2) V_t, D_t  →  (3) passive C_t×G\n"
-        "Fit: SBI (MNLE/MCMC)  |  PR = single patch (no leave); continue / pause / quit",
+        "M0 drift x_t  →  M1 λ=f(x)  →  M2 V_t,D_t  →  M3 active V×D | passive C×G  →  M4 pause\n"
+        "Fit: SBI  |  States: V reward · D deficit · C context · G withdrawal gain",
         "#EEEEFF",
         fontsize=9,
     )

@@ -1,32 +1,49 @@
 # opioid-model_wiki
 
-Computational framework for morphine **progressive-ratio (PR)** behavior: latent motivational states, drift-style models, active vs passive (yoked) groups, and CS collaboration.
+**Addiction Motivational Model (AMM)** — computational spec for morphine progressive-ratio behavior (active vs yoked passive, withdrawal, re-exposure).
 
 **Repository:** [github.com/limserenahansol/opioid-model_wiki](https://github.com/limserenahansol/opioid-model_wiki)
 
+---
+
 ## Start here
 
-| Audience | Document |
-|----------|----------|
-| **LLMs / Cursor agents** | [**LLM_WIKI.md**](./LLM_WIKI.md) |
-| **Humans (proposal)** | [PROPOSAL_WORKFLOW_KR_EN.md](./PROPOSAL_WORKFLOW_KR_EN.md) |
-| **Experiment reference** | [docs/MORPHINE_PR_EXPERIMENT.md](./docs/MORPHINE_PR_EXPERIMENT.md) |
+| Role | Document |
+|------|----------|
+| **Anyone / LLM** | [LLM_WIKI.md](./LLM_WIKI.md) |
+| **Model logic** | [model/01_LOGIC_FLOW.md](./model/01_LOGIC_FLOW.md) |
+| **Equations (M0–M4)** | [model/03_MATHEMATICAL_MODELS.md](./model/03_MATHEMATICAL_MODELS.md) |
+| **Fitting pipeline** | [model/05_FITTING_WORKFLOW.md](./model/05_FITTING_WORKFLOW.md) |
+| **Experiment / JSONL** | [docs/MORPHINE_PR_EXPERIMENT.md](./docs/MORPHINE_PR_EXPERIMENT.md) |
 
-## Wiki index
+---
 
-- [wiki/01_SCIENCE_AND_HYPOTHESES.md](./wiki/01_SCIENCE_AND_HYPOTHESES.md)
-- [wiki/02_EXPERIMENT_AND_DATA.md](./wiki/02_EXPERIMENT_AND_DATA.md)
-- [wiki/03_COMPUTATIONAL_MODELS.md](./wiki/03_COMPUTATIONAL_MODELS.md)
-- [wiki/04_WORKFLOW_AND_ARTIFACTS.md](./wiki/04_WORKFLOW_AND_ARTIFACTS.md)
-- [wiki/05_GLOSSARY.md](./wiki/05_GLOSSARY.md)
-- [wiki/06_AGENT_PLAYBOOK.md](./wiki/06_AGENT_PLAYBOOK.md)
+## Model ladder
 
-## Other files
+| Tier | Description |
+|------|-------------|
+| **M0** | Single latent engagement `x_t` (drift + noise) |
+| **M1** | `x_t` → lick output `λ_t` |
+| **M2** | Dual `V_t` (reward/value) + `D_t` (deficit/withdrawal) |
+| **M3** | Group-specific: active `V×D` vs passive `C×G` |
+| **M4** | Pause / re-engagement extension |
 
-- `EMAIL_CS_COLLEAGUE.md` / `.docx` — modeling collaboration email
-- `logic_flow_schematic.png` — regenerate with `python3 generate_logic_schematic.py`
+---
+
+## Figure
+
+![Logic flow](./logic_flow_schematic.png)
+
+```bash
+python3 generate_logic_schematic.py   # regenerate
+```
+
+---
 
 ## Status
 
-**Concept & wiki:** ready  
-**Code (parser, fitter):** planned — see parent implementation checklist
+| Component | Status |
+|-----------|--------|
+| Model spec (`model/`) | Complete |
+| Wiki index (`wiki/`) | Complete |
+| Code (`src/`) | Planned |

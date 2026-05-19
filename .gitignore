@@ -4,3 +4,8 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
+
+# Do not commit correspondence drafts
+EMAIL_*.md
+EMAIL_*.docx
+**/archive/

@@ -1,16 +1,16 @@
 ---
-description: Opioid PR behavioral modeling — latent state, active/passive, drift models
+description: Addiction Motivational Model (AMM) — latent state PR modeling
 globs: opioid_behavioral_model/**/*
 alwaysApply: false
 ---
 
-# Opioid behavioral modeling
+# Addiction Motivational Model (AMM)
 
-Before editing this folder, read `opioid_behavioral_model/LLM_WIKI.md`.
+Read `model/00_OVERVIEW.md` and `model/03_MATHEMATICAL_MODELS.md` before edits.
 
-- v1 is **behavior-only**; no neural fitting unless user provides data.
-- Do **not** assume mice represent full PR schedule; use latent engagement state (Models 0–3).
-- **Passive group** is not only control — PIT-like withdrawal seeking and patient-relevant transition are core claims.
-- Treat `x_t` as hidden value; map to lick rate via softplus/sigmoid (Model 1).
-- PR ≠ foraging patch-leave; model continue/pause/quit on one patch.
-- JSONL schema: see `Morphine_PR_Experiment_Documentation.md` in parent directory.
+- Canonical spec lives in `model/` (logic, states, M0–M4, workflow, predictions).
+- Do not add email or chat logs to the repo.
+- `x_t` is hidden value; lick rate = softplus/logistic output (M1).
+- Active: V_t, D_t, interaction at re-exposure. Passive: C_t × G_t for withdrawal PIT.
+- PR = continue/pause/quit, not foraging patch-leave.
+- JSONL: `docs/MORPHINE_PR_EXPERIMENT.md`.
