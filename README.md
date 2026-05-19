@@ -42,10 +42,17 @@ python3 generate_logic_schematic.py   # regenerate
 
 ---
 
+## OMCR (Claude Code)
+
+Multi-agent research setup: [omcr/INSTALL.md](./omcr/INSTALL.md) · [한국어](./omcr/INSTALL.ko.md) · preset `examples/opioid-pr-behavior/`
+
+Pair with [opioidaddiction-matlab](https://github.com/limserenahansol/opioidaddiction-matlab) for MATLAB pipeline.
+
 ## Status
 
 | Component | Status |
 |-----------|--------|
 | Model spec (`model/`) | Complete |
 | Wiki index (`wiki/`) | Complete |
+| OMCR scaffold (`CLAUDE.md`, `.claude/`) | Complete |
 | Code (`src/`) | Planned |

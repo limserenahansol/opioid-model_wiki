@@ -84,10 +84,24 @@ Meeting target: **Monday 10:00 CNC** (confirm locally). Eli may start fitting be
 
 ---
 
+## OMCR (Claude Code)
+
+| Doc | Content |
+|-----|---------|
+| [omcr/INSTALL.md](./omcr/INSTALL.md) | Install [OMCR](https://github.com/youngeun1209/oh-my-claudecode-research) |
+| [omcr/INSTALL.ko.md](./omcr/INSTALL.ko.md) | 한국어 가이드 |
+| [CLAUDE.md](./CLAUDE.md) | Project context for `@supervisor`, `@analysis-implementer`, … |
+| [examples/opioid-pr-behavior/](./examples/opioid-pr-behavior/) | Memory preset |
+
+**MATLAB repo:** [opioidaddiction-matlab](https://github.com/limserenahansol/opioidaddiction-matlab) — same OMCR scaffold.
+
+---
+
 ## For agents
 
-- Implement [model/07](./model/07_DATA_RULES_AND_LIKELIHOOD.md) before any likelihood code.
-- Do **not** commit email threads.
+- **Claude Code:** [CLAUDE.md](./CLAUDE.md) + OMCR agents
+- Implement [model/07](./model/07_DATA_RULES_AND_LIKELIHOOD.md) before any likelihood code
+- Do **not** commit email threads
 - Regenerate schematic: `python3 generate_logic_schematic.py`
 
-**Code status:** spec + data rules complete; `src/` not in repo yet.
+**Code status:** spec + data rules + OMCR scaffold complete; `src/` not in repo yet.
