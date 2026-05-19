@@ -1,0 +1,16 @@
+---
+description: Opioid PR behavioral modeling — latent state, active/passive, drift models
+globs: opioid_behavioral_model/**/*
+alwaysApply: false
+---
+
+# Opioid behavioral modeling
+
+Before editing this folder, read `opioid_behavioral_model/LLM_WIKI.md`.
+
+- v1 is **behavior-only**; no neural fitting unless user provides data.
+- Do **not** assume mice represent full PR schedule; use latent engagement state (Models 0–3).
+- **Passive group** is not only control — PIT-like withdrawal seeking and patient-relevant transition are core claims.
+- Treat `x_t` as hidden value; map to lick rate via softplus/sigmoid (Model 1).
+- PR ≠ foraging patch-leave; model continue/pause/quit on one patch.
+- JSONL schema: see `Morphine_PR_Experiment_Documentation.md` in parent directory.
