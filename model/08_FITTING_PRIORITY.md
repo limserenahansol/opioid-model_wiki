@@ -21,7 +21,7 @@ flowchart TD
 
 | Tier | Model | Status |
 |------|-------|--------|
-| **1** | M0 single-state drift; M1 `λ = softplus(x)` | **Primary deliverable** |
+| **1** | M0 drift + M1 `λ = λ_max·sigmoid(βx)`; MLE per mouse | **Eli implementing** — see [09_ELI_IMPLEMENTATION.md](./09_ELI_IMPLEMENTATION.md) |
 | **2** | Compare per-lick `r` vs `E[r\|T]` | Sanity / Eli closed-form link |
 | **3** | M2 `V_t`, `D_t`, interaction | Only if identifiable |
 | **4** | M3b `C_t × G` (passive generalized motivation) | Interpretive extension of passive withdrawal |

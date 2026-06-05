@@ -19,6 +19,7 @@
 | 6 | [model/06_PREDICTIONS.md](./model/06_PREDICTIONS.md) | H0–H4 tests |
 | **7** | [model/07_DATA_RULES_AND_LIKELIHOOD.md](./model/07_DATA_RULES_AND_LIKELIHOOD.md) | **day≥4, lockout mask, pairs** |
 | **8** | [model/08_FITTING_PRIORITY.md](./model/08_FITTING_PRIORITY.md) | **Tier 1–4; Eli alignment** |
+| **9** | [model/09_ELI_IMPLEMENTATION.md](./model/09_ELI_IMPLEMENTATION.md) | **Eli MLE implementation (live)** |
 
 ---
 

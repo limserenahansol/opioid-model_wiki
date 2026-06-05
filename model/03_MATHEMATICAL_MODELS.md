@@ -72,14 +72,16 @@ state = QUIT     if x_k < θ_quit
 Same `x_t` dynamics as M0. Observed behavior:
 
 ```
-λ_k = softplus(x_k)           # lick rate
-# or
-P(lick_k) = logistic(x_k)     # Bernoulli lick
+λ_k = softplus(x_k)           # wiki default
+# or (Eli implementation — see model/09)
+λ(x) = λ_max · sigmoid(β · x)
 ```
+
+**Eli Tier-1 choices:** `λ_max = 1/P5_ILI` per session; `β = 2` fixed; `σ = 0` (deterministic drift).
 
 **Constraint satisfied:** `x_k < 0` allowed; `λ_k > 0` always.
 
-**Breakpoint:** session ends or enters QUIT when `x` crosses `θ_quit` for sustained window.
+**Breakpoint:** session ends or enters QUIT when `x` crosses `θ_quit` for sustained window (if used; Eli fit may use continuous λ prediction vs ILI).
 
 ---
 

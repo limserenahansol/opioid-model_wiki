@@ -18,6 +18,7 @@
 | [06_PREDICTIONS.md](./06_PREDICTIONS.md) | Hypotheses H0–H4 as falsifiable model tests |
 | [07_DATA_RULES_AND_LIKELIHOOD.md](./07_DATA_RULES_AND_LIKELIHOOD.md) | **run_009 rules:** day filter, lockout mask, pairs |
 | [08_FITTING_PRIORITY.md](./08_FITTING_PRIORITY.md) | **Tier 1–4:** what to fit now vs conditional |
+| [09_ELI_IMPLEMENTATION.md](./09_ELI_IMPLEMENTATION.md) | **Eli's current MLE fit** (parameters, status) |
 
 **Experiment I/O:** [../docs/MORPHINE_PR_EXPERIMENT.md](../docs/MORPHINE_PR_EXPERIMENT.md)  
 **Data locations:** [../docs/DATA_SOURCES.md](../docs/DATA_SOURCES.md)  

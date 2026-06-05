@@ -39,8 +39,8 @@ Where files live for AMM fitting. **Not** email — operational map only.
 
 | | |
 |---|---|
-| **Modeling** | Elijah Paul (Eli) — drift model, MNLE/SBI |
-| **Behavior / data** | Hansol Lim — paradigm, run_009, lockout rules |
+| **Modeling** | Elijah Paul (Eli) — Tier 1 drift + sigmoid λ; MLE per mouse — see [model/09](../model/09_ELI_IMPLEMENTATION.md) |
+| **Behavior / data** | Hansol Lim — paradigm, run_009, lockout rules, wiki updates |
 
 ---
 
